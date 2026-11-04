@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, effect, input, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { form } from '@angular/forms/signals';
+import { Categoria } from '../../../models/categoria.model';
+import { CategoriaService } from '../../../core/services/categoria.service';
 
 @Component({
   imports: [ReactiveFormsModule],
@@ -9,11 +11,18 @@ import { form } from '@angular/forms/signals';
   templateUrl: './categoria-form.html',
 })
 export class CategoriaForm {
+  categoria = input<Categoria|null>(null);
+  salvou = output<void>();
+  cancelou = output<void>();
+  erro = '';
+
   formulario = new FormGroup({
-    descricao: new FormControl('',[
+    descricao: new FormControl('',{
+      nonNullable:true,
+      validators:[
       Validators.required,
       Validators.minLength(3)
-    ]),
+    ]}),
       
   tipo: new FormControl<'RECEITA' | 'DESPESA'>(
     'DESPESA',
@@ -23,7 +32,22 @@ export class CategoriaForm {
     nonNullable: true
   })
 });
-    // TODO ALUNO: criar FormGroup tipado com descricao, tipo e ativo.
+  constructor(private categoriaService:CategoriaService){
+    effect(()=>{
+      const categoria = this.categoria();
+      this.erro = '';
+      this.formulario.reset(categoria ? {
+        descricao: categoria.descricao,
+        tipo:categoria.tipo,
+        ativo:categoria.ativo
+      }:{
+        descricao: '',
+        tipo: 'DESPESA',
+        ativo: true
+      })
+    })
+  }
+  // TODO ALUNO: criar FormGroup tipado com descricao, tipo e ativo.
   // TODO ALUNO: injetar CategoriaService e implementar salvar().
   // TODO ALUNO: tratar modo de edição e mensagens de validação.
 }

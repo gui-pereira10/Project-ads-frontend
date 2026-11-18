@@ -1,14 +1,12 @@
-import { Categoria } from './categoria.model';
-
-export interface Lancamento {
-  id: number;
+export interface LancamentoRequest {
   descricao: string;
   valor: number;
-  dataLancamento: string; 
-  observacao?: string;   
-  categoriaId: number;
-  usuarioId: number;
-  categoria?: Categoria;  
+  dataLancamento: string; // yyyy-MM-dd
+  observacao: string | null;
+  categoriaId: number
 }
-
-export type LancamentoInput = Omit<Lancamento, 'id' | 'categoria'>;
+export interface LancamentoResponse extends LancamentoRequest {
+  id: number;
+  categoriaDescricao: string;
+  usuarioId: number
+}

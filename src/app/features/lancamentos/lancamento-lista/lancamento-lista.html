@@ -1,4 +1,4 @@
-<app-lancamento-form [usuarioId]="usuarioId" (salvou)="carregar()" />
+<app-lancamento-form (salvou)="carregar()" />
 <h2>Lançamentos financeiros</h2>
 @if (carregando()) { <p>Carregando...</p> }
 @if (erro()) { <div class="alert alert-danger">{{ erro() }}</div> }
